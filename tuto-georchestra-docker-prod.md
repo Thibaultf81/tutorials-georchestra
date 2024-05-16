@@ -11,7 +11,7 @@ cd docker
 git checkout 23.0 && git submodule update
 ```
 
-# Step 2: Change traefik configuration file
+## Step 2: Change traefik configuration file
 
 We will add a CertificateResolver:
 
@@ -57,3 +57,19 @@ certificatesResolvers:
 
 ping: {}
 ```
+
+
+## Step 3: Update accordingly traefik config in docker-compose.override.yml
+
+In docker-compose.override.yml:
+- We can comment the `traefik-me-certificate-downloader` block
+- For `georchestra-127-0-1-1.traefik.me` service:
+    - Comment the `depends_on` section
+    - Change the `volumes` section for:
+```
+        - /var/run/docker.sock:/var/run/docker.sock:ro
+        - ./ resources/traefik_custom.yml:/etc/traefik/traefik.yml:ro
+        - acme:/acme
+```
+
+- ...
